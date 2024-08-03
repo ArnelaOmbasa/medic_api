@@ -3,6 +3,7 @@ package com.example.api_medic.rest.controllers;
 import com.example.api_medic.core.service.UserService;
 import com.example.api_medic.rest.dto.UserDTO;
 import com.example.api_medic.rest.dto.UserRequestDTO;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,8 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/users")
+@SecurityRequirement(name = "JWT Security")
+
 public class UserController {
 
     private final UserService userService;
