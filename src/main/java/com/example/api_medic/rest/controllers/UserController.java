@@ -1,14 +1,15 @@
 package com.example.api_medic.rest.controllers;
 
-import com.example.api_medic.core.service.UserService;
-import com.example.api_medic.rest.dto.UserDTO;
-import com.example.api_medic.rest.dto.UserRequestDTO;
-import io.swagger.v3.oas.annotations.security.SecurityRequirement;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+        import com.example.api_medic.core.service.UserService;
+        import com.example.api_medic.rest.dto.UserDTO;
+        import com.example.api_medic.rest.dto.UserRequestDTO;
+        import io.swagger.v3.oas.annotations.security.SecurityRequirement;
+        import org.springframework.beans.factory.annotation.Autowired;
+        import org.springframework.http.ResponseEntity;
+        import org.springframework.security.access.prepost.PreAuthorize;
+        import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
+        import java.util.List;
 
 @RestController
 @RequestMapping("/users")
@@ -24,22 +25,30 @@ public class UserController {
     }
 
     @RequestMapping(method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('ADMIN')")
+
     public ResponseEntity<List<UserDTO>> getAllUsers() {
         return ResponseEntity.ok(userService.getAllUsers());
     }
 
     @RequestMapping(value = "/{id}", method = RequestMethod.GET)
+    @PreAuthorize("hasAuthority('ADMIN')")
+
     public ResponseEntity<UserDTO> getUserById(@PathVariable String id) {
         return ResponseEntity.ok(userService.getUserById(id));
     }
 
 
     @RequestMapping(value = "/{id}", method = RequestMethod.PUT)
+    @PreAuthorize("hasAuthority('ADMIN')")
+
     public ResponseEntity<UserDTO> updateUser(@PathVariable String id, @RequestBody UserRequestDTO userRequest) {
         return ResponseEntity.ok(userService.updateUser(id, userRequest));
     }
 
     @RequestMapping(value = "/block/{id}", method = RequestMethod.POST)
+    @PreAuthorize("hasAuthority('ADMIN')")
+
     public ResponseEntity<Void> blockUser(@PathVariable String id) {
         userService.blockUser(id);
         return ResponseEntity.noContent().build();

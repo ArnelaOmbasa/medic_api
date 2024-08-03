@@ -10,10 +10,13 @@ import com.example.api_medic.rest.dto.UserDTO;
 import com.example.api_medic.rest.dto.UserRequestDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -43,16 +46,26 @@ public class AuthService {
     }
 
     public LoginDTO signIn(LoginRequestDTO loginRequestDTO) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
-        );
-        User user = userRepository.findByUsername(loginRequestDTO.getUsername())
-                .orElseThrow(() -> new ResourceNotFoundException("This user does not exist."));
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(loginRequestDTO.getUsername(), loginRequestDTO.getPassword())
+            );
 
-        user.setLastLoginDate(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
-        userRepository.save(user);
-        String jwt = jwtService.generateToken(user);
+            User user = (User) authentication.getPrincipal();
+            if (!user.getRole().equals("ADMIN")) {
+                throw new AccessDeniedException("Only admins are allowed to log in.");
+            }
 
-        return new LoginDTO(jwt);
+            user.setLastLoginDate(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
+            userRepository.save(user);
+
+            String jwt = jwtService.generateToken(user);
+            return new LoginDTO(jwt);
+        } catch (BadCredentialsException e) {
+            throw new RuntimeException("Invalid username or password.");
+        } catch (Exception e) {
+            throw new RuntimeException("Login failed.");
+        }
     }
+
 }
