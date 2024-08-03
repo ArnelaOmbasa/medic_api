@@ -3,3 +3,9 @@ spring:
     mongodb:
       uri: mongodb+srv://arnelaomb:hSj8up2bp5BBCSkD@cluster0.qhjk5an.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
       database: mediclab
+configuration:
+  swagger:
+    app: 'MedicaLab App'
+    description: 'A simple MedicaLab app built with Spring Boot'
+    developer: 'Arnela Ombasa'
+    email: 'arnela.ombasa02@outlook.com'

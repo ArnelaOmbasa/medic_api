@@ -44,13 +44,16 @@ public class UserService {
         return new UserDTO(user);
     }
 
-    public UserDTO updateUser(String id, UserRequestDTO userRequest) {
-        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("User not found"));
-        user.setUsername(userRequest.getUsername());
-        user.setEmail(userRequest.getEmail());
-        user.setPassword(userRequest.getPassword());
-        user = userRepository.save(user);
-        return new UserDTO(user);
+    public UserDTO updateUser(String userId, UserRequestDTO payload) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("The user with the given ID does not exist."));
+
+        existingUser.setUsername(payload.getUsername());
+        existingUser.setPassword(payload.getPassword());
+        existingUser.setEmail(payload.getEmail());
+
+        User updatedUser = userRepository.save(existingUser);
+        return new UserDTO(updatedUser);
     }
 
     public void blockUser(String id) {
