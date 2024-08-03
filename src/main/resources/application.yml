@@ -1,0 +1,5 @@
+spring:
+  data:
+    mongodb:
+      uri: mongodb+srv://arnelaomb:hSj8up2bp5BBCSkD@cluster0.qhjk5an.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0
+      database: mediclab
