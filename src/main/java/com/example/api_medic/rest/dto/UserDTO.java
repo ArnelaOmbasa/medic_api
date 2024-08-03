@@ -7,12 +7,13 @@ public class UserDTO {
     private String username;
     private String email;
     private boolean blocked;
-
+    private String lastLoginDate;
     public UserDTO(User user) {
         this.id = user.getUserId();
         this.username = user.getUsername();
         this.email = user.getEmail();
         this.blocked = user.isBlocked();
+        this.lastLoginDate = user.getLastLoginDate();
     }
 
     public String getId() {
@@ -46,5 +47,12 @@ public class UserDTO {
     public void setBlocked(boolean blocked) {
         this.blocked = blocked;
     }
-}
 
+    public String getLastLoginDate() {
+        return lastLoginDate;
+    }
+
+    public void setLastLoginDate(String lastLoginDate) {
+        this.lastLoginDate = lastLoginDate;
+    }
+}
