@@ -24,9 +24,7 @@ public class AuthController {
     }
 
     @RequestMapping(method = RequestMethod.POST, path = "/register")
-    @PreAuthorize("hasAuthority('ADMIN')")
-
-    public ResponseEntity<UserDTO> register(@RequestBody UserRequestDTO user) {
+   public ResponseEntity<UserDTO> register(@RequestBody UserRequestDTO user) {
         return ResponseEntity.ok(authService.signUp(user));
     }
 

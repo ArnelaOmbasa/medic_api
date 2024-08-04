@@ -1,6 +1,7 @@
 package com.example.api_medic.core.service;
 
 
+import com.example.api_medic.core.enums.UserRole;
 import com.example.api_medic.core.exceptions.repository.ResourceNotFoundException;
 import com.example.api_medic.core.model.User;
 import com.example.api_medic.core.repository.UserRepository;
@@ -52,14 +53,15 @@ public class AuthService {
             );
 
             User user = (User) authentication.getPrincipal();
-            if (!user.getRole().equals("ADMIN")) {
+
+            if (user.getRole() != UserRole.ADMIN) {
                 throw new AccessDeniedException("Only admins are allowed to log in.");
             }
 
             user.setLastLoginDate(LocalDateTime.now().format(DateTimeFormatter.ISO_DATE_TIME));
             userRepository.save(user);
 
-            String jwt = jwtService.generateToken(user);
+            String jwt = jwtService.generateToken(user, user.getRole().name());
             return new LoginDTO(jwt);
         } catch (BadCredentialsException e) {
             throw new RuntimeException("Invalid username or password.");
